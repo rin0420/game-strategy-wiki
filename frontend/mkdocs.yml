@@ -1,0 +1,56 @@
+site_name: トレンドゲーム攻略 Wiki
+site_description: 最新のトレンドゲームの攻略情報を毎日更新！
+site_author: Auto Game Wiki
+
+theme:
+  name: material
+  language: ja
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+  palette:
+    # ユーザーが自由に切り替えられるようにするが、デフォルトはダークモード（ゲーム向け）
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra:
+  # Google AdSense のスクリプトタグなどを挿入するための設定用プレースホルダー
+  analytics:
+    provider: custom
+  # adsense_client_id: "ca-pub-XXXXXXXXXXXXXXXX" # 後で設定する
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.magiclink
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
