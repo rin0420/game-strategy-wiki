@@ -34,14 +34,14 @@ def generate_article(game_title):
     * 文体: ゲーマー向けに親しみやすく、かつ有益な情報を提供するトーン
     
     【出力形式】
-    Markdownのテキストのみを出力してください（Markdownコードブロックの ```markdown 等で囲まないでください）。
+    Markdownのテキストのみを出力してください（Markdownコードブロック of ```markdown 等で囲まないでください）。
     """
     
     try:
         response = model.generate_content(prompt)
         content = response.text
         
-        # 不要なMarkdownコードブロックのバッククォートが含まれている場合は除去
+        # 不要なMarkdownコードブロック of バッククォートが含まれている場合は除去
         if content.startswith("```markdown"):
             content = content[11:]
         if content.startswith("```"):
@@ -52,30 +52,34 @@ def generate_article(game_title):
         return content.strip()
     except Exception as e:
         print(f"Failed to generate content: {e}")
-        return None
+        sys.exit(1)
 
 def save_article(game_title, content):
-    # 保存先のディレクトリ
-    docs_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "docs")
-    os.makedirs(docs_dir, exist_ok=True)
-    
-    # ファイル名の生成 (URLセーフにするため簡易的に処理)
-    safe_title = game_title.replace(" ", "-").replace("/", "-").lower()
-    date_str = datetime.datetime.now().strftime("%Y-%m-%d")
-    filename = f"{date_str}-{safe_title}.md"
-    filepath = os.path.join(docs_dir, filename)
-    
-    with open(filepath, "w", encoding="utf-8") as f:
-        # MkDocs/Material用のフロントマター（メタデータ）を付与
-        frontmatter = f"---\ntitle: {game_title} 攻略ガイド\ndescription: {game_title} の最新攻略情報まとめ\n---\n\n"
-        f.write(frontmatter + content)
+    try:
+        # 保存先のディレクトリ
+        docs_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "docs")
+        os.makedirs(docs_dir, exist_ok=True)
         
-    print(f"Article saved to: {filepath}")
-    
-    # MkDocsのナビゲーションに自動追加されるように index.md も更新（簡易版）
-    index_path = os.path.join(docs_dir, "index.md")
-    with open(index_path, "a", encoding="utf-8") as f:
-        f.write(f"\n* [{game_title} 攻略ガイド]({filename})")
+        # ファイル名の生成 (URLセーフにするため簡易的に処理)
+        safe_title = game_title.replace(" ", "-").replace("/", "-").lower()
+        date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        filename = f"{date_str}-{safe_title}.md"
+        filepath = os.path.join(docs_dir, filename)
+        
+        with open(filepath, "w", encoding="utf-8") as f:
+            # MkDocs/Material用のフロントマター（メタデータ）を付与
+            frontmatter = f"---\ntitle: {game_title} 攻略ガイド\ndescription: {game_title} の最新攻略情報まとめ\n---\n\n"
+            f.write(frontmatter + content)
+            
+        print(f"Article saved to: {filepath}")
+        
+        # MkDocsのナビゲーションに自動追加されるように index.md も更新（簡易版）
+        index_path = os.path.join(docs_dir, "index.md")
+        with open(index_path, "a", encoding="utf-8") as f:
+            f.write(f"\n* [{game_title} 攻略ガイド]({filename})")
+    except Exception as e:
+        print(f"Failed to save article: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     # コマンドライン引数からゲームタイトルを取得、なければデフォルト
