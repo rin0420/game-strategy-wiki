@@ -1,0 +1,42 @@
+name: Auto Generate Game Wiki
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      game_title:
+        description: 'Target game title (optional)'
+        required: false
+        default: 'モンスターハンターワイルズ'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          pip install mkdocs mkdocs-material google-generativeai
+
+      - name: Generate Article
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          TARGET_GAME="${{ github.event.inputs.game_title || 'モンスターハンターワイルズ' }}"
+          python backend/generate_article.py "$TARGET_GAME"
+
+      - name: Deploy to GitHub Pages
+        run: |
+          cd frontend
+          mkdocs gh-deploy --force
