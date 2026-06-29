@@ -29,12 +29,6 @@ theme:
         icon: material/weather-night
         name: Switch to dark mode
 
-extra:
-  # Google AdSense のスクリプトタグなどを挿入するための設定用プレースホルダー
-  analytics:
-    provider: custom
-  # adsense_client_id: "ca-pub-XXXXXXXXXXXXXXXX" # 後で設定する
-
 plugins:
   - search
 
